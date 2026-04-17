@@ -1,0 +1,27 @@
+# Preferred on AWS: pull CI image from GHCR — deploy/README.md §4 and deploy/compose.ghcr.yml
+#
+# Optional — build on EC2 (requires full repo clone on branch):
+#   docker compose -f aws/docker-compose.yml --env-file deploy/client.env up -d --build
+#
+# Push to ECR (example):
+#   aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+#   docker tag erpnext-aws:local $ECR_REGISTRY/erpnext-aws:latest
+#   docker push $ECR_REGISTRY/erpnext-aws:latest
+
+services:
+  erpnext:
+    build:
+      context: ..
+      dockerfile: deploy/shared/Dockerfile
+      args:
+        GITHUB_PAT_TOKEN: ${GITHUB_PAT_TOKEN}
+        CUSTOM_ERPNEXT_BRANCH: ${CUSTOM_ERPNEXT_BRANCH:-prod}
+        CUSTOM_ERPNEXT_GITHUB_PATH: ${CUSTOM_ERPNEXT_GITHUB_PATH:-AchuCelestter/erpnext}
+        CUSTOM_WHITELIST_GITHUB_PATH: ${CUSTOM_WHITELIST_GITHUB_PATH:-}
+        CUSTOM_WHITELIST_BRANCH: ${CUSTOM_WHITELIST_BRANCH:-prod}
+        DEPLOY_TARGET: aws
+    image: ${ERPNext_IMAGE_NAME:-erpnext-aws}:local
+    ports:
+      - "${ERPNext_HTTP_PORT:-80}:80"
+    env_file:
+      - ../deploy/client.env
