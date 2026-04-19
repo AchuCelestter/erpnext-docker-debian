@@ -16,7 +16,7 @@ WORKDIR /home/$systemUser/$benchFolderName
 ARG GITHUB_PAT_TOKEN
 ARG CUSTOM_ERPNEXT_BRANCH=version-15
 ARG CUSTOM_ERPNEXT_GITHUB_PATH=AchuCelestter/erpnext
-ARG CUSTOM_WHITELIST_GITHUB_PATH=
+ARG CUSTOM_WHITELIST_GITHUB_PATH=AchuCelestter/erpnext_app_solid
 ARG CUSTOM_WHITELIST_BRANCH=prod
 
 RUN echo "-> Start builder" \
